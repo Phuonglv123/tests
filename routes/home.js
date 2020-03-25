@@ -81,7 +81,10 @@ router.post('/upload', async function (req, res) {
                                     }
                                 });
                                 if (share.data) {
-                                    return res.status(200).json({msg: 'create success'})
+                                    res.render('result.html', {
+                                        'title': 'Application Home',
+                                        'message': 'Create folder success !'
+                                    })
                                 } else {
                                     return res.status(400).json({msg: 'server is not found'})
                                 }

@@ -64,20 +64,21 @@ router.post('/upload', async function (req, res) {
             }
         );
         if (res.data) {
-            const list = await drive.permissions.list({
-                fileId: res.data.id
-            })
-            console.log(list)
-            // const share = await drive.permissions.create({
-            //     resource: {
-            //         'type': 'user',
-            //         'role': 'writer',
-            //         'emailAddress': 'johnnguyen@pupam.com'
-            //     },
-            //     fileId: res.data.id,
-            //     fields: 'id',
-            // })
-            // console.log(share)
+            const share = await drive.permissions.create({
+                fileId: res.data.id,
+                sendNotificationEmail: true,
+                supportsAllDrives: true,
+                resource: {
+                    role: "fileOrganizer",
+                    type: "group",
+                    emailAddress: namefile
+                }
+            });
+            if (share.data) {
+                return res.status(200).json({msg: 'create success'})
+            } else {
+                return res.status(400).json({msg: 'server is not found'})
+            }
         }
     }
 });

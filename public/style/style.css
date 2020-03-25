@@ -1,0 +1,26 @@
+body {
+  margin: 0;
+}
+
+.main-drive {
+  position: relative;
+  height: 92vh;
+}
+.main-drive .form-input {
+  width: 30%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-top: 10em;
+}
+.main-drive .footer-img {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.main-drive .footer-img img {
+  width: 100%;
+}
+
+/*# sourceMappingURL=style.css.map */

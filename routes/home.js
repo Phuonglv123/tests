@@ -1,19 +1,13 @@
-const {Router} = require('express')
-const passport = require('passport')
-const {google} = require('googleapis')
-const KEYS = require('../configs/keys');
-const async = require("async");
-
-
-const router = Router()
+const {Router} = require('express');
+const {google} = require('googleapis');
+const User = require('../model/users');
+const router = Router();
 
 router.get('/', function (req, res) {
     res.render('home.html', {'title': 'Application Home'})
-})
+});
 
-router.get('/dashboard', function (req, res) {
-
-    // if not user
+router.get('/create', function (req, res) {
     if (typeof req.user == "undefined") res.redirect('/auth/login/google')
     else {
 
@@ -38,51 +32,70 @@ router.get('/dashboard', function (req, res) {
 })
 
 router.post('/upload', async function (req, res) {
-
-    // not auth
-    if (!req.user) res.redirect('/auth/login/google')
-    else {
-        // auth user
-
-        // config google drive with client token
-        const oauth2Client = new google.auth.OAuth2()
-        oauth2Client.setCredentials({
-            'access_token': req.user.accessToken
-        });
-        const drive = google.drive({
-            version: 'v3',
-            auth: oauth2Client
-        });
-        let namefile = req.body.namefile;
-        const fileMetadata = {
-            'name': namefile + '- pupam.com',
-            'mimeType': 'application/vnd.google-apps.folder'
-        };
-        const res = await drive.drives.create({
-                resource: fileMetadata,
-                requestId: namefile + Math.random(),
-            }
-        );
-        if (res.data) {
-            const share = await drive.permissions.create({
-                fileId: res.data.id,
-                sendNotificationEmail: true,
-                supportsAllDrives: true,
-                resource: {
-                    role: "fileOrganizer",
-                    type: "group",
-                    emailAddress: namefile
-                }
-            });
-            if (share.data) {
-                return res.status(200).json({msg: 'create success'})
+    User.findOne({email: req.body.email})
+        .then(user => {
+            if (user) {
+                res.json({msg: "email is does exits"});
             } else {
-                return res.status(400).json({msg: 'server is not found'})
+                return User.findOne({phone: req.body.phone});
             }
-        }
-    }
+        })
+        .then(phone => {
+            if (phone) {
+                res.json({msg: "Phone is does exits "})
+            } else {
+                const newUser = new User({
+                    ...req.body
+                });
+                newUser.save()
+                    .then(async () => {
+                        if (!req.user) res.redirect('/auth/login/google')
+                        else {
+                            const oauth2Client = new google.auth.OAuth2()
+                            oauth2Client.setCredentials({
+                                'access_token': req.user.accessToken
+                            });
+                            const drive = google.drive({
+                                version: 'v3',
+                                auth: oauth2Client
+                            });
+                            let namefile = req.body.email;
+                            const fileMetadata = {
+                                'name': namefile + '- pupam.com',
+                                'mimeType': 'application/vnd.google-apps.folder'
+                            };
+                            const result = await drive.drives.create({
+                                    resource: fileMetadata,
+                                    requestId: namefile + Math.random(),
+                                }
+                            );
+                            if (result.data) {
+                                const share = await drive.permissions.create({
+                                    fileId: result.data.id,
+                                    sendNotificationEmail: true,
+                                    supportsAllDrives: true,
+                                    resource: {
+                                        role: "fileOrganizer",
+                                        type: "group",
+                                        emailAddress: namefile
+                                    }
+                                });
+                                if (share.data) {
+                                    return res.status(200).json({msg: 'create success'})
+                                } else {
+                                    return res.status(400).json({msg: 'server is not found'})
+                                }
+                            }
+                        }
+                    })
+                    .catch(console.log)
+            }
+        })
+        .catch(e => {
+            return res.status(500).json({error: 'server not found'})
+        });
 });
 
 
-module.exports = router
+module.exports = router;
 

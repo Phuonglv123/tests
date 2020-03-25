@@ -6,7 +6,7 @@ let router = Router();
 
 router.get('/login', function (req, res) {
 
-    if (req.user) res.redirect('/dashboard') // if auth
+    if (req.user) res.redirect('/create') // if auth
     else res.redirect('/auth/login/google') // if not auth
 
 });
@@ -18,7 +18,7 @@ router.get('/login/google', passport.authenticate("google", {
 
 // callback from google oauth (with token)
 router.get('/google/redirect', passport.authenticate('google'), function (req, res) {
-    res.redirect('/dashboard')
+    res.redirect('/create')
 });
 
 // logout

@@ -4,10 +4,10 @@ const KEYS = {
         'clientSecret': "Pra2la7ky0tLui6gzN9hcIy2",
         'callback': '/auth/google/redirect'
     },
-    "session_key": "secret123"
-}
+    "session_key": "secret123",
+};
 
-module.exports = KEYS
+module.exports = KEYS;
 
 
 

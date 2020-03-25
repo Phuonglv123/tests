@@ -1,11 +1,7 @@
-const passport = require('passport')
-const GoogleStrategy = require('passport-google-oauth20')
-const KEYS = require('./keys')
-
-
-// set cookie base on this user
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20');
+const KEYS = require('./keys');
 passport.serializeUser((user, done) => {
-
     let sessionUser = {
         _id: user.googleID,
         accessToken: user.accesstoken,
@@ -15,19 +11,12 @@ passport.serializeUser((user, done) => {
     }
 
     done(null, sessionUser)
-})
-
-// get cookie & get relevent session data
+});
 passport.deserializeUser((sessionUser, done) => {
-
-    done(null, sessionUser) // now can access request.user
-})
-
-
+    done(null, sessionUser)
+});
 passport.use(
-    // google login
     new GoogleStrategy(
-        // google keys
         {
             clientID: KEYS.googleOauth.clientID,
             clientSecret: KEYS.googleOauth.clientSecret,
@@ -35,17 +24,14 @@ passport.use(
             passReqToCallback: true
 
         }, (request, accessToken, refreshToken, profile, done) => {
-
-            //save data in session
             user = {
                 "accesstoken": accessToken,
                 'googleID': profile.id,
                 'name': profile.displayName,
                 'pic_url': profile._json.picture,
                 'email': profile._json.email
-            }
-
+            };
             done(null, user)
         }
     )
-)
+);

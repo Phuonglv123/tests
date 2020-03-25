@@ -1,0 +1,27 @@
+body {
+  margin: 0;
+}
+
+.main-drive {
+  position: relative;
+  height: 92vh;
+
+  .form-input {
+    width: 30%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-top: 10em;
+  }
+
+  .footer-img {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+
+    img {
+      width: 100%;
+    }
+  }
+}

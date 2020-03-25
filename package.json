@@ -2,10 +2,10 @@
   "name": "googledrive_access",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "dev": "nodemon index.js",
-    "prod": "node index.js"
+    "dev": "nodemon app.js",
+    "prod": "node app.js"
   },
   "author": "Dhananjaya Karandana",
   "license": "ISC",

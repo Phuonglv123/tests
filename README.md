@@ -15,7 +15,7 @@ $ npm run dev
 # Development stage ( This will nodemon internally ).
 
 $ npm run prod
-# Production version ( This command will run node index.js internally to perform well in production environment ).
+# Production version ( This command will run node app.js internally to perform well in production environment ).
 
 ```
 
@@ -33,7 +33,7 @@ $ npm run prod
     ├── views                # Views
     │   ├── dashboard.html   
     │   ├── home.html       
-    ├── index.js
+    ├── app.js
     ├── MS19802886.xml       # submission details
     ├── package.json
     └── README.md
